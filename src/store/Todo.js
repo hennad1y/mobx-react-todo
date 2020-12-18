@@ -6,7 +6,6 @@ class Todo {
   error = ''
 
   isDelete = false
-  deleteId = null
 
   filter = {
     onlyCompleted: false,
@@ -65,21 +64,18 @@ class Todo {
   }
 
   removeTodo = (id) => {
-    this.isDelete = true
-    this.deleteId = id
+    this.isDelete = id
   }
 
   removeTodoAgree = () => {
-    const index = this.todos.findIndex(todo => todo.id === this.deleteId)
+    const index = this.todos.findIndex(todo => todo.id === this.isDelete)
     this.todos.splice(index, 1)
 
     this.isDelete = false
-    this.deleteId = null
   }
 
   removeTodoDisagree = () => {
     this.isDelete = false
-    this.deleteId = null
   }
 
   toggleOnlyCompleted = () => {
