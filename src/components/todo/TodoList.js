@@ -5,7 +5,7 @@ import {observer} from 'mobx-react'
 import TodoItem from "./TodoItem";
 import {LoadingOutlined} from "@ant-design/icons";
 
-const TodoList = observer(() => {
+const TodoList = () => {
   const {fetchTodos, getTodos, loading, error, filter, toggleOnlyCompleted, setSearch, pagination, changePage, isDelete, removeTodoDisagree, removeTodoAgree}= TodoStore
   const {onlyCompleted, search} = filter
   const {allPages, current} = pagination
@@ -30,6 +30,6 @@ const TodoList = observer(() => {
       </Modal>
     </div>
   )
-})
+}
 
-export default TodoList
+export default observer(TodoList)
