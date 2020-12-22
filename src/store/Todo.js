@@ -24,7 +24,6 @@ class Todo {
 
   fetchTodos = async () => {
     this.todos = []
-    this.allTodos = []
     this.error = ''
 
     try {
