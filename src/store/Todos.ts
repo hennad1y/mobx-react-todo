@@ -1,13 +1,10 @@
 import {makeAutoObservable, runInAction} from 'mobx'
-import {ITodoFilter, ITodoItem, ITodoPagination} from "../typescript/interfaces/Todo"
-import {TTodoIsDelete} from "../typescript/types/Todo"
+import {ITodoFilter, ITodoItem, ITodoPagination} from "../typescript/interfaces/Todos"
 
-class Todo {
-  loading: Boolean = true
+class Todos {
+  loading = true
   todos: ITodoItem[] = []
-  error: String = ''
-
-  isDelete: TTodoIsDelete = false
+  error = ''
 
   filter: ITodoFilter = {
     onlyCompleted: false,
@@ -44,7 +41,7 @@ class Todo {
     }
   }
 
-  getTodos = () => {
+  getTodos = (): ITodoItem[] => {
     const {search, onlyCompleted} = this.filter
     const {current, limit} = this.pagination
 
@@ -53,30 +50,19 @@ class Todo {
     if (search.length) todos = todos.filter(todo => todo.title.toLowerCase().indexOf(search.toString()) > -1)
     runInAction(() => this.pagination.allPages = Math.ceil((todos.length / +limit) * 10))
 
-    const start: Number = (+current - 1) * +limit
-    return todos.slice(+start, +start + +limit)
+    const start = (current - 1) * limit
+    return todos.slice(start, start + limit)
   }
 
-  changeStatus = (id: Number) => {
-    const index: Number = this.todos.findIndex((todo: ITodoItem) => todo.id === id)
-    const todo: ITodoItem = this.todos[+index]
+  changeStatus = (id: number) => {
+    const index = this.todos.findIndex(todo => todo.id === id)
+    const todo: ITodoItem = this.todos[index]
 
-    this.todos[+index] = {...todo, completed: !todo.completed}
+    this.todos[index] = {...todo, completed: !todo.completed}
   }
 
-  removeTodo = (id: Boolean | Number) => {
-    this.isDelete = id
-  }
-
-  removeTodoAgree = () => {
-    const index: Number = this.todos.findIndex((todo: ITodoItem) => todo.id === +this.isDelete)
-    this.todos.splice(+index, 1)
-
-    this.isDelete = false
-  }
-
-  removeTodoDisagree = () => {
-    this.isDelete = false
+  removeTodo = (id: number) => {
+    this.todos = this.todos.filter((todo: ITodoItem) => todo.id !== id)
   }
 
   toggleOnlyCompleted = () => {
@@ -84,15 +70,15 @@ class Todo {
     this.pagination.current = 1
   }
 
-  setSearch = (value: String) => {
-    this.filter.search = value.toString()
+  setSearch = (value: string) => {
+    this.filter.search = value
     this.pagination.current = 1
   }
 
-  changePage = (page: Number) => {
-    this.pagination.current = +page
+  changePage = (page: number) => {
+    this.pagination.current = page
   }
 }
 
-const TodoStore = new Todo()
+const TodoStore = new Todos()
 export default TodoStore

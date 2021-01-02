@@ -1,12 +1,18 @@
-import React, {FunctionComponent, ReactElement} from 'react'
+import React, {FC, ReactElement} from 'react'
 import {Checkbox, List} from "antd"
 import {DeleteFilled} from "@ant-design/icons"
-import TodoStore from "../../store/Todo"
+import ModalStore from "../../store/Modal"
+import TodoStore from "../../store/Todos"
 import {observer} from "mobx-react"
-import {ITodoItem} from "../../typescript/interfaces/Todo"
+import {ITodoItem} from "../../typescript/interfaces/Todos"
 
-const TodoList: FunctionComponent<{items: ITodoItem[]}> = ({items}): ReactElement => {
-  const {changeStatus, removeTodo} = TodoStore
+type Props = {
+  items: ITodoItem[]
+}
+
+const TodoList: FC<Props> = ({items}): ReactElement => {
+  const {changeStatus} = TodoStore
+  const {openModal} = ModalStore
 
   return (
     <List
@@ -16,10 +22,10 @@ const TodoList: FunctionComponent<{items: ITodoItem[]}> = ({items}): ReactElemen
       renderItem={item => {
         return (
           <List.Item>
-            <Checkbox checked={!!item.completed} onChange={() => changeStatus(item.id)}>
+            <Checkbox checked={item.completed} onChange={() => changeStatus(item.id)}>
               {item.title}
             </Checkbox>
-            <DeleteFilled onClick={() => removeTodo(item.id)}/>
+            <DeleteFilled onClick={() => openModal(item.id)}/>
           </List.Item>
         )
       }}
